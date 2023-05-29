@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json.schemastore.org/web-manifest-combined.json",
+  "name": "goods & services",
+  "short_name": "gs",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#fff",
+  "description": "goods and services",
+  "icons": [
+    {
+      "src": "/favicon.png",
+      "sizes": "128x128",
+      "type": "image/png"
+    }
+  ]
+}
