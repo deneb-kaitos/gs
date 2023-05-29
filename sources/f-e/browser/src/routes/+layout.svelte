@@ -5,8 +5,34 @@
   import {
     browser as IsInBrowser,
   } from '$app/environment';
+  import {
+    onMount,
+    onDestroy,
+  } from 'svelte';
+  import {
+    Token,
+  } from '$lib/stores/token/token.store.mjs';
   import HeaderContent from '$lib/containers/Header/HeaderContent.svelte';
   import FooterContent from '$lib/containers/Footer/FooterContent.svelte';
+
+  /** @type {import('svelte/store').Unsubscriber} */
+  let unsubscribeFromToken;
+  
+  onMount(() => {
+    if (IsInBrowser === true) {
+       unsubscribeFromToken = Token.subscribe((token) => {
+        console.log('svelte:token', token);
+      });
+
+      Token.setToken({ value: 'asshole' });
+    }
+  });
+
+  onDestroy(() => {
+    if (IsInBrowser === true) {
+      unsubscribeFromToken();
+    }
+  });
 </script>
 
 <style>
