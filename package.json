@@ -1,0 +1,43 @@
+{
+  "name": "@deneb-kaitos/gs",
+  "version": "0.0.0",
+  "description": "goods and services",
+  "type": "module",
+  "packageManager": "pnpm@8.6.0",
+  "engines": {
+    "node": "20.2.0",
+    "pnpm": "8.6.0"
+  },
+  "engineStrict": true,
+  "scripts": {
+    "preinstall": "npx only-allow pnpm"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://git@github.com:deneb-kaitos/gs.git"
+  },
+  "author": "Dmitry N. Medvedev <dmitry.medvedev@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/deneb-kaitos/gs/issues"
+  },
+  "homepage": "https://github.com/deneb-kaitos/gs/issues#readme",
+  "devDependencies": {
+    "@babel/core": "^7.22.1",
+    "@babel/eslint-parser": "^7.21.8",
+    "@babel/eslint-plugin": "^7.19.1",
+    "@babel/preset-env": "^7.22.2",
+    "eslint": "^8.41.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-import-resolver-node": "^0.3.7",
+    "eslint-module-utils": "^2.8.0",
+    "eslint-plugin-chai-friendly": "^0.7.2",
+    "eslint-plugin-es": "^4.1.0",
+    "eslint-plugin-import": "^2.27.5",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-rule-composer": "^0.3.0",
+    "eslint-scope": "^7.2.0",
+    "eslint-utils": "^3.0.0",
+    "eslint-visitor-keys": "^3.4.1"
+  }
+}
