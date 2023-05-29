@@ -28,5 +28,8 @@
 		"vite": "^4.3.9",
 		"vitest": "^0.31.1"
 	},
-	"type": "module"
+	"type": "module",
+	"dependencies": {
+		"@sveltejs/adapter-node": "^1.2.4"
+	}
 }
