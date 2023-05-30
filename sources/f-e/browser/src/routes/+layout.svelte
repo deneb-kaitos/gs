@@ -15,13 +15,22 @@
   import HeaderContent from '$lib/containers/Header/HeaderContent.svelte';
   import FooterContent from '$lib/containers/Footer/FooterContent.svelte';
   import "inter-ui/inter.css";
+  import {
+    Loader,
+  } from '$lib/bl/workers/ldr/ldr.mjs';
+
+  /** @type {Loader | null} */
+  let loader;
 
   /** @type {import('svelte/store').Unsubscriber} */
   let unsubscribeFromToken;
   
-  onMount(() => {
+  onMount(async () => {
     if (IsInBrowser === true) {
-       unsubscribeFromToken = Token.subscribe((token) => {
+      loader = new Loader();
+      await loader.load();
+
+      unsubscribeFromToken = Token.subscribe((token) => {
         console.log('svelte:token', token);
       });
 
@@ -29,8 +38,13 @@
     }
   });
 
-  onDestroy(() => {
+  onDestroy(async () => {
     if (IsInBrowser === true) {
+      if (loader) {
+        await loader.unload();
+
+        loader = null;
+      }
       unsubscribeFromToken();
     }
   });
