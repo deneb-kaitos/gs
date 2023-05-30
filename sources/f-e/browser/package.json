@@ -15,6 +15,7 @@
     "format": "prettier --plugin-search-dir . --write ."
   },
   "dependencies": {
+    "@js-temporal/polyfill": "^0.4.4",
     "@sveltejs/adapter-node": "^1.2.4",
     "inter-ui": "^3.19.3",
     "xstate": "^4.37.2"
