@@ -5,13 +5,15 @@ import {
   LoaderService,
 } from '$lib/bl/workers/ldr/ldr.xstate.mjs';
 
-const workerUrls = Object.freeze({
-  communicatorURL: new URL('$lib/bl/workers/comm/comm.mjs', import.meta.url),
-});
 
 export class Loader {
+  #workers = Object.freeze({
+    communicator: {
+      url: new URL('$lib/bl/workers/comm/comm.mjs', import.meta.url),
+      worker: null,
+    },
+  });
   #loaderService = null;
-  #communicator = null;
 
   constructor() {
     this.#loaderService = LoaderService;
@@ -21,15 +23,15 @@ export class Loader {
 
 
   async load() {
-    this.#communicator = new Worker(workerUrls.communicatorURL, {
+    this.#workers.communicator.worker = new Worker(this.#workers.communicator.url, {
       type: 'module',
     });
 
-    this.#communicator.onmessage = (messageEvent = null) => {
+    this.#workers.communicator.worker.onmessage = (messageEvent = null) => {
       console.log('this.#communicator.onmessage', messageEvent);
     };
 
-    this.#communicator.postMessage({
+    this.#workers.communicator.worker.postMessage({
       type: WorkerProtocolMessageTypes.INIT_REQ,
       payload: {
         proto: 'ws',
@@ -39,12 +41,12 @@ export class Loader {
       },
     });
 
-    console.log('this.#communicator:', this.#communicator);
+    console.log('workers:', this.#workers);
   }
 
   async unload() {
-    if (this.#communicator) {
-      this.#communicator.postMessage({
+    if (this.#workers.communicator.worker) {
+      this.#workers.communicator.worker.postMessage({
         type: WorkerProtocolMessageTypes.DIE_REQ,
         payload: null,
       });
