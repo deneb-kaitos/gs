@@ -14,6 +14,7 @@
   } from '$lib/stores/token/token.store.mjs';
   import HeaderContent from '$lib/containers/Header/HeaderContent.svelte';
   import FooterContent from '$lib/containers/Footer/FooterContent.svelte';
+  import "inter-ui/inter.css";
 
   /** @type {import('svelte/store').Unsubscriber} */
   let unsubscribeFromToken;
