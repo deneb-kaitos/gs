@@ -9,8 +9,6 @@ const workerUrls = Object.freeze({
   communicatorURL: new URL('$lib/bl/workers/comm/comm.mjs', import.meta.url),
 });
 
-// import CommunicatorWorker from '$lib/bl/workers/comm/comm.mjs?worker';
-
 export class Loader {
   #loaderService = null;
   #communicator = null;
