@@ -4,7 +4,18 @@ import {
 import {
   LoaderService,
 } from '$lib/bl/workers/ldr/ldr.xstate.mjs';
-
+import {
+  actions as loaderActions,
+} from './config.xstate/actions.mjs';
+import {
+  delays as loaderDelays,
+} from './config.xstate/delays.mjs';
+import {
+  guards as loaderGuards,
+} from './config.xstate/guards.mjs';
+import {
+  services as loaderServices,
+} from './config.xstate/services.mjs';
 
 export class Loader {
   #workers = Object.freeze({
@@ -15,14 +26,19 @@ export class Loader {
   });
   #loaderService = null;
 
-  constructor() {
-    this.#loaderService = LoaderService;
-
-    this.#loaderService.start();
-  }
-
-
   async load() {
+    const loaderServiceContext = {};
+    const loaderServiceConfig = {
+      actions: loaderActions(),
+      delays: loaderDelays(),
+      guards: loaderGuards(),
+      services: loaderServices(),
+    };
+    this.#loaderService = LoaderService({
+      config: loaderServiceConfig,
+      context: loaderServiceContext,
+    }).start();
+
     this.#workers.communicator.worker = new Worker(this.#workers.communicator.url, {
       type: 'module',
     });
