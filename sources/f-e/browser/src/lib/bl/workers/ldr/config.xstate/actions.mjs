@@ -1,5 +1,5 @@
-export const actions = (caller) => ({
+export const actions = () => ({
   log: (ctx, event) => {
-    console.log('[actions.log]', ctx, event, caller);
+    console.log('[actions.log]', ctx, event);
   },
 });
