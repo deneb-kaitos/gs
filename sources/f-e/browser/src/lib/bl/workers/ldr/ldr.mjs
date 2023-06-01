@@ -53,8 +53,6 @@ export class Loader {
       throw new TypeError(`unknown message type: ${type}`);
     }
 
-    console.log(type, payload);
-
     this.#loaderService.send({
       type,
       payload,
@@ -73,6 +71,8 @@ export class Loader {
         loadWorker: (ctx) => {
           const workerName = this.#workers.workerLoadOrder[ctx.loadWorkerId];
 
+          console.log(`actions.loadWorker: "${workerName}"`);
+
           (this.#workers.items[workerName]).ptr = new Worker((this.#workers.items[workerName]).url, {
             type: 'module',
             credentials: 'same-origin',
@@ -82,11 +82,17 @@ export class Loader {
           (this.#workers.items[workerName]).ptr.onmessage = this.#workerMessageHandler;
         },
         configureWorker: (ctx) => {
+          console.log(`actions.configureWorker::ctx.configureWorkerId: "${ctx.configureWorkerId}"`);
+
           const workerName = this.#workers.workerLoadOrder[ctx.configureWorkerId];
+
+          console.log(`actions.configureWorker::workerName: "${workerName}"`);
 
           const {
             config,
           } = this.#workers.items[workerName];
+
+          console.log(`actions.configureWorker::config: "${workerName}"`, config);
 
           (this.#workers.items[workerName]).ptr.postMessage({
             type: WorkerLoaderMessageTypes.WORKER_CONFIG_REQ,
@@ -94,6 +100,13 @@ export class Loader {
               config,
             },
           });
+
+          // this.#loaderService.send({
+          //   type: WorkerProtocolMessageTypes.WORKER_CONFIG_REQ,
+          //   payload: {
+          //     config,
+          //   },
+          // });
         },
       },
       delays: {},
@@ -113,6 +126,8 @@ export class Loader {
           const result = Object.values(ctx.workers)
             .map((workerInfo) => workerInfo.isLoaded)
             .reduce((result, isLoaded) => result && isLoaded, true);
+
+          console.log(`guards.IsAllWorkersAreLoaded: ${result}`);
 
           return result;
         },
@@ -134,6 +149,8 @@ export class Loader {
             .map((workerInfo) => workerInfo.isConfigured)
             .reduce((result, isConfigured) => result && isConfigured, true);
 
+          console.log(`guards.IsAllWorkersAreConfigured: ${result}`);
+
           return result;
         },
       },
@@ -146,6 +163,13 @@ export class Loader {
       config: loaderServiceConfig,
       context: loaderServiceContext,
     });
+    //
+    // const {
+    //   unsubscribe,
+    // } = this.#loaderService.subscribe((state) => {
+    //   console.log('loaderService.subscribe:', state);
+    // });
+    //
     this.#loaderService
       .onTransition((state) => {
         console.log(`#loaderService.onTransition to "${state.value}"`);
@@ -167,6 +191,26 @@ export class Loader {
       // });
     //
     this.#loaderService.start();
+
+    // this.#workers.items.communicator.ptr = new Worker(this.#workers.items.communicator.url, {
+    //   type: 'module',
+    // });
+
+    // this.#workers.items.communicator.ptr.onmessage = (messageEvent = null) => {
+    //   console.log('this.#communicator.onmessage', messageEvent);
+    // };
+
+    // this.#workers.items.communicator.ptr.postMessage({
+    //   type: WorkerProtocolMessageTypes.INIT_REQ,
+    //   payload: {
+    //     proto: 'ws',
+    //     host: 'localhost',
+    //     port: 9000,
+    //     path: '/',
+    //   },
+    // });
+
+    // console.log('workers:', this.#workers);
   }
 
   async unload() {
