@@ -3,94 +3,142 @@ import {
   createMachine,
   interpret,
 } from 'xstate';
+import {
+  WorkerLoaderMessageTypes,
+} from '../WorkerLoaderMessageTypes.mjs';
 
 const LoaderMachine = createMachine({
   id: 'LoaderMachine',
   predictableActionArguments: true,
   preserveActionOrder: true,
-  initial: 'initial',
+  initial: 'INITIAL',
   context: {},
   states: {
-    initial: {
+    INITIAL: {
       entry: [
+        'listWorkers',
         assign({
-          loadWorkerId: (ctx, evt) => {
-            console.log('loadWorkerId:', ctx, evt);
+          loadWorkerId: 0,
+          configureWorkerId: 0,
+          workers: (ctx) => {
+            const result = ctx.workerLoadOrder
+              .reduce(
+                (acc, workerName) => {
+                  acc[workerName] = {
+                    isLoaded: false,
+                    isConfigured: false,
+                  };
 
-            return 0;
+                  return acc;
+                }, Object.create(null),
+              );
+
+            return result;
           },
         }),
-        assign({
-          IsAllWorkersLoaded: () => false,
-        }),
-        'log',
       ],
-      always: [{
-        target: 'loadWorkers',
-      }],
+      always: [
+        {
+          target: 'LOAD_WORKERS',
+        }
+      ],
     },
-    loadWorkers: {
-      entry: [],
-      exit: [
-        assign({
-          loadWorkerId: (ctx) => {
-            if (ctx.loadWorkerId <= ctx.workerLoadOrder.length) {
-              return ++ctx.loadWorkerId;
-            }
-          },
-        }),
+    LOAD_WORKERS: {
+      entry: [
+        'loadWorker',
       ],
-      invoke: {
-        id: 'loadWorker',
-        src: 'loadAWorker',
-        onDone: {
-          target: 'OK',
+      on: {
+        [WorkerLoaderMessageTypes.WORKER_CTOR]: {
           actions: [
-            // assign({ error: (ctx, evt) => evt.workerName}),
+            assign({
+              workers: (ctx, evt) => {
+                const {
+                  payload: {
+                    name,
+                  },
+                } = evt;
+                const result = structuredClone(ctx.workers);
+
+                result[name] = {
+                  ...result[name],
+                  ...{
+                    isLoaded: true,
+                  },
+                };
+
+                return result;
+              },
+              loadWorkerId: (ctx) => ctx.loadWorkerId += 1,
+            }),
+            'log',
           ],
-        },
-        onError: {
-          target: 'ER',
-          actions: [
-            assign({ error: (ctx, evt) => evt}),
-          ],
+          target: 'CHECK_ALL_WORKERS_LOADED',
         },
       },
-      // always: [
-      //   {
-      //     target: 'OK',
-      //     cond: 'IsAllWorkersAreLoaded',
-      //   },
-      //   {
-      //     target: 'loadWorkers',
-      //     cond: 'IsNotAllWorkersAreLoaded',
-      //   },
-      // ],
-      // entry: [
-      //   'loadAWorker',
-      // ],
-      // on: {
-      //   WORKER_LOADED: {
-      //     actions: ['log'],
-      //   },
-      // },
-      // always: [
-      //   {
-      //     target: 'OK',
-      //     cond: 'IsAllWorkersAreLoaded',
-      //   },
-      //   {
-      //     target: 'loadWorkers',
-      //     cond: 'IsNotAllWorkersAreLoaded',
-      //   }
-      // ],
     },
-    ER: {
-      entry: ['log'],
+    CHECK_ALL_WORKERS_LOADED: {
+      always: [
+        {
+          target: 'CONFIGURE_WORKERS',
+          cond: 'IsAllWorkersAreLoaded',
+        },
+        {
+          target: 'LOAD_WORKERS',
+        },
+      ],
+    },
+    ER_LOAD_WORKER: {
       type: 'final',
     },
+    CONFIGURE_WORKERS: {
+      entry: [
+        'configureWorker',
+      ],
+      on: {
+        [WorkerLoaderMessageTypes.WORKER_CONFIG_RES]: {
+          actions: [
+            assign({
+              workers: (ctx, evt) => {
+                const {
+                  payload: {
+                    name,
+                  },
+                } = evt;
+
+                const result = structuredClone(ctx.workers);
+
+                result[name] = {
+                  ...result[name],
+                  ...{
+                    isConfigured: true,
+                  },
+                };
+
+                return result;
+              },
+              configureWorkerId: (ctx) => ctx.configureWorkerId += 1,
+            }),
+            'log',
+          ],
+          target: 'CHECK_ALL_WORKERS_CONFIGURED',
+        },
+      },
+    },
+    CHECK_ALL_WORKERS_CONFIGURED: {
+      always: [
+        {
+          target: 'OK',
+          cond: 'IsAllWorkersAreConfigured',
+        },
+        {
+          target: 'CONFIGURE_WORKERS',
+        },
+      ],
+    },
     OK: {
-      entry: ['log'],
+      type: 'final',
+    },
+    ER_CONFIGURE_WORKER: {
       type: 'final',
     },
   },

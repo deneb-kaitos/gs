@@ -1,6 +1,6 @@
-import {
-  WorkerProtocolMessageTypes,
-} from '$lib/bl/workers/WorkerProtocolMessageTypes.mjs';
+// import {
+//   WorkerProtocolMessageTypes,
+// } from '$lib/bl/workers/WorkerProtocolMessageTypes.mjs';
 
 export const services = ({ workers }) => ({
   loadAWorker: (ctx, evt) => {
@@ -20,15 +20,15 @@ export const services = ({ workers }) => ({
       console.log(`${workerName}.onmessage`, messageEvent);
     };
 
-    (workers.items[workerName]).ptr.postMessage({
-      type: WorkerProtocolMessageTypes.INIT_REQ,
-      payload: {
-        proto: 'ws',
-        host: 'localhost',
-        port: 9000,
-        path: '/',
-      },
-    });
+    // (workers.items[workerName]).ptr.postMessage({
+    //   type: WorkerProtocolMessageTypes.INIT_REQ,
+    //   payload: {
+    //     proto: 'ws',
+    //     host: 'localhost',
+    //     port: 9000,
+    //     path: '/',
+    //   },
+    // });
 
 
     console.log('services.loadAWorker', ctx, evt, workerLoadOrder, loadWorkerId, workerName);
