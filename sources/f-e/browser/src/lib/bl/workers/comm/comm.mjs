@@ -31,7 +31,7 @@ const processMessage = (incomingMessage = null) => {
         config,
       } = incomingMessage.payload;
 
-      console.log(`[WorkerLoaderMessageTypes.WORKER_CONFIG_REQ]`, config);
+      console.log(`${self.name}::WORKER_CONFIG_REQ`, config);
 
       self.CONFIG = Object.assign(Object.create(null), config);
 
