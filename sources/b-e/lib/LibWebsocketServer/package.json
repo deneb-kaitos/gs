@@ -1,0 +1,85 @@
+{
+  "name": "@deneb-kaitos/libwebsocketserver",
+  "version": "0.0.0",
+  "description": "[lib] WebsocketServer",
+  "type": "module",
+  "packageManager": "pnpm@8.6.0",
+  "engines": {
+    "node": "20.2.0",
+    "pnpm": "8.6.0"
+  },
+  "engineStrict": true,
+  "private": true,
+  "main": "index.mjs",
+  "scripts": {
+    "preinstall": "npx only-allow pnpm",
+    "test": "./node_modules/.bin/nyc ./node_modules/.bin/mocha --jobs $(nproc --all)"
+  },
+  "author": "Dmitry N. Medvedev <dmitry.medvedev@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "uWebSockets.js": "github:uNetworking/uWebSockets.js#v20.27.0"
+  },
+  "devDependencies": {
+    "chai": "^4.3.7",
+    "mocha": "^10.2.0",
+    "nyc": "^15.1.0"
+  },
+  "mocha": {
+    "asyncOnly": true,
+    "bail": true,
+    "checkLeaks": true,
+    "diff": true,
+    "extension": [
+      "mjs"
+    ],
+    "exit": true,
+    "failZero": true,
+    "forbidOnly": true,
+    "forbidPending": true,
+    "parallel": true,
+    "fullTrace": true,
+    "inlineDiffs": true,
+    "reporter": "spec",
+    "recursive": true,
+    "spec": [
+      "./specs/*.spec.mjs"
+    ]
+  },
+  "nyc  ": {
+    "all": true,
+    "reporter": "lcov",
+    "check-coverage": true,
+    "branches": 80,
+    "lines": 80,
+    "functions": 80,
+    "statements": 80,
+    "extension": [".mjs"],
+    "watermarks": {
+      "lines": [
+        80,
+        95
+      ],
+      "functions": [
+        80,
+        95
+      ],
+      "branches": [
+        80,
+        95
+      ],
+      "statements": [
+        80,
+        95
+      ]
+    },
+    "include": [
+      "**/*.mjs"
+    ],
+    "exclude": [
+      "node_modules",
+      "**/*.spec.mjs"
+    ],
+    "excludeNodeModules": true
+  }
+}
