@@ -26,6 +26,7 @@ export class LibWebsocketServer {
       this.#app = uWS
         .App({})
         .ws(`${this.#config.WS_PATH}*`, {
+          // FIXME: double check the compressor type
           compression: uWS.SHARED_COMPRESSOR,
           maxPayloadLength: this.#config.WS_MAX_PAYLOAD_LENGTH,
           idleTimeout: this.#config.WS_IDLE_TIMEOUT,
