@@ -1,54 +1,58 @@
 import util from 'node:util';
 import uWS from 'uWebSockets.js';
-import {
-  randomUUID,
-} from 'node:crypto';
+
+const DISABLE_FORCED_CLOSE = 0;
 
 export class LibWebsocketServer {
   #app = null;
   #config = null;
+  #handlers = null;
   #handle = null;
+  // eslint-disable-next-line class-methods-use-this
   #debuglog = () => {};
 
-  constructor(config = null) {
+  constructor(config = null, handlers = null, debuglog = null) {
     if (config === null) {
       throw new ReferenceError('config is undefined');
     }
 
     this.#config = Object.freeze(Object.assign(Object.create(null), config));
+
+    if (handlers === null) {
+      throw new ReferenceError('handlers are undefined');
+    }
+
+    this.#handlers = Object.freeze(handlers);
+
+    if (debuglog) {
+      this.#debuglog = debuglog;
+    }
   }
 
   start() {
-    this.#debuglog = util.debuglog('LWS');
+    this.#debuglog = util.debuglog(this.constructor.name);
 
     return new Promise((ok, fail) => {
       this.#app = uWS
         .App({})
-        .ws(`${this.#config.WS_PATH}*`, {
-          compression: uWS.SHARED_COMPRESSOR,
-          maxPayloadLength: this.#config.WS_MAX_PAYLOAD_LENGTH,
-          idleTimeout: this.#config.WS_IDLE_TIMEOUT,
-          open: (ws) => {
-            ws.gs = {
-              id: randomUUID(),
-            };
-
-            console.log(`websocket connected: ${ws.gs.id}`);
-          },
-          message: (ws, message, isBinary) => {
-            const ok = ws.send(message, isBinary);
-          },
-          close: (ws, code, message) => {
-            console.log('websocket closed');
-          },
-        }).listen(this.#config.WS_HOST, this.#config.WS_PORT, (handle) => {
+        .ws(`${this.#config.server.WS_PATH}*`, {
+          // NB: we need no compression since we operate on binary messages
+          compression: uWS.DISABLED,
+          maxPayloadLength: this.#config.server.WS_MAX_PAYLOAD_LENGTH,
+          idleTimeout: this.#config.server.WS_IDLE_TIMEOUT,
+          maxLifetime: DISABLE_FORCED_CLOSE,
+          sendPingsAutomatically: true,
+          open: this.#handlers.open,
+          message: this.#handlers.message,
+          close: this.#handlers.close,
+        }).listen(this.#config.server.WS_HOST, this.#config.server.WS_PORT, (handle) => {
           if (handle) {
             this.#handle = handle;
 
-            this.#debuglog(`listening on ${this.#config.WS_HOST}:${this.#config.WS_PORT}`);
+            this.#debuglog(`listening on ${this.#config.server.WS_HOST}:${this.#config.server.WS_PORT}`);
             ok();
           } else {
-            fail(new Error(`failed to listen to ${this.#config.WS_HOST}:${this.#config.WS_PORT}`));
+            fail(new Error(`failed to listen to ${this.#config.server.WS_HOST}:${this.#config.server.WS_PORT}`));
           }
         });
     });
