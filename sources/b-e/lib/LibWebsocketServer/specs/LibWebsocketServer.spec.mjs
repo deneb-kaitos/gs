@@ -8,27 +8,51 @@ import {
   expect,
 } from 'chai';
 import {
+  config,
+} from 'dotenv';
+import {
   LibWebsocketServer,
 } from '../LibWebsocketServer.mjs';
 
 describe('LibWebsocketServer', () => {
   let libWebsocketServer = null;
+  let libWebsocketServerConfig = null;
 
-  before(() => {
-    libWebsocketServer = new LibWebsocketServer();
+  before(async () => {
+    config({
+      path: 'specs/.env',
+    });
 
-    libWebsocketServer.start();
+    libWebsocketServerConfig = {
+      WS_PROTO: process.env.WS_PROTO,
+      WS_HOST: process.env.WS_HOST,
+      WS_PORT: parseInt(process.env.WS_PORT, 10),
+      WS_PATH: process.env.WS_PATH,
+      WS_MAX_PAYLOAD_LENGTH: parseInt(process.env.WS_MAX_PAYLOAD_LENGTH, 10),
+      WS_IDLE_TIMEOUT: parseInt(process.env.WS_IDLE_TIMEOUT, 10),
+    };
+
+    libWebsocketServer = new LibWebsocketServer(libWebsocketServerConfig);
+
+    return await libWebsocketServer.start();
   });
 
-  after(() => {
+  after(async () => {
     if (libWebsocketServer) {
-      libWebsocketServer.stop();
+      await libWebsocketServer.stop();
 
-      libWebsocketServer = undefined;
+      libWebsocketServer = null;
     }
   });
 
-  it('is a dummy test', async () => {
-    expect(true).to.be.true;
+  it('should fail on undefined config', async () => {
+    let wss = null;
+
+    try {
+      // eslint-disable-next-line no-unused-vars
+      wss = new LibWebsocketServer(null);
+    } catch (referenceError) {
+      expect(referenceError).to.be.instanceOf(ReferenceError);
+    }
   });
 });
