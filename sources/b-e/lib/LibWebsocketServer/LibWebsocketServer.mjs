@@ -8,6 +8,7 @@ export class LibWebsocketServer {
   #app = null;
   #config = null;
   #handle = null;
+  // eslint-disable-next-line class-methods-use-this
   #debuglog = () => {};
 
   constructor(config = null) {
