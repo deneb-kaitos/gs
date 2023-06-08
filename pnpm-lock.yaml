@@ -93,7 +93,7 @@ importers:
         version: file:sources/b-e/lib/LibWebsocketServer
       '@deneb-kaitos/wscodes':
         specifier: workspace:^
-        version: link:../../../common/codes/ws
+        version: file:sources/common/codes/ws
       dotenv:
         specifier: ^16.1.4
         version: 16.1.4
@@ -103,6 +103,8 @@ importers:
         version: github.com/uNetworking/uWebSockets.js/d39d4181daf5b670d44cbc1b18f8c28c85fd4142
     dependenciesMeta:
       '@deneb-kaitos/libwebsocketserver':
+        injected: true
+      '@deneb-kaitos/wscodes':
         injected: true
 
   sources/common/codes/ws: {}
@@ -5118,6 +5120,14 @@ packages:
     optionalDependencies:
       bufferutil: 4.0.7
       utf-8-validate: 6.0.3
+    dev: false
+
+  file:sources/common/codes/ws:
+    resolution: {directory: sources/common/codes/ws, type: directory}
+    name: '@deneb-kaitos/wscodes'
+    version: 0.0.0
+    engines: {node: 20.2.0, pnpm: 8.6.0}
+    requiresBuild: true
     dev: false
 
   github.com/uNetworking/uWebSockets.js/d39d4181daf5b670d44cbc1b18f8c28c85fd4142:
