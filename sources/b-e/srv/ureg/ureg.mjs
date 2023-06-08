@@ -6,38 +6,21 @@
  */
 
 import process from 'node:process';
-import {
-  randomUUID,
-} from 'node:crypto';
-import util, {
-  TextDecoder,
-} from 'node:util';
+import util from 'node:util';
 import {
   config,
 } from 'dotenv';
 import {
   LibWebsocketServer,
 } from '@deneb-kaitos/libwebsocketserver';
+import {
+  UserRegistrationBL,
+} from './UserRegistration.bl.mjs';
 
 globalThis.name = 'ureg';
 
-const decoder = new TextDecoder();
 const debuglog = util.debuglog(globalThis.name);
-const libWebsocketServerHandlers = {
-  open: (ws) => {
-    ws.gs = {
-      id: randomUUID(),
-    };
-
-    debuglog(`websocket connected: ${ws.gs.id}`);
-  },
-  message: (ws, message, isBinary) => {
-    debuglog(ws.gs.id, message, isBinary);
-  },
-  close: (ws, code, message) => {
-    debuglog(`websocket [${ws.gs.id}] closed with code [${code}] and message:`, decoder.decode(message));
-  },
-};
+let userRegistrationBL = null;
 const readConfigFromEnv = () => ({
   server: {
     WS_PROTO: process.env.WS_PROTO,
@@ -50,9 +33,17 @@ const readConfigFromEnv = () => ({
 });
 let libWebsocketServer = null;
 const startServer = async () => {
+  userRegistrationBL = new UserRegistrationBL(debuglog);
+
   config({
     path: '.env',
   });
+
+  const libWebsocketServerHandlers = {
+    open: userRegistrationBL.open,
+    message: userRegistrationBL.message,
+    close: userRegistrationBL.close,
+  };
 
   libWebsocketServer = new LibWebsocketServer(readConfigFromEnv(), libWebsocketServerHandlers, debuglog);
 

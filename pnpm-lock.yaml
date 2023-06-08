@@ -91,12 +91,21 @@ importers:
       '@deneb-kaitos/libwebsocketserver':
         specifier: workspace:^
         version: file:sources/b-e/lib/LibWebsocketServer
+      '@deneb-kaitos/wscodes':
+        specifier: workspace:^
+        version: link:../../../common/codes/ws
       dotenv:
         specifier: ^16.1.4
         version: 16.1.4
+    devDependencies:
+      uWebSockets.js:
+        specifier: github:uNetworking/uWebSockets.js#v20.30.0
+        version: github.com/uNetworking/uWebSockets.js/d39d4181daf5b670d44cbc1b18f8c28c85fd4142
     dependenciesMeta:
       '@deneb-kaitos/libwebsocketserver':
         injected: true
+
+  sources/common/codes/ws: {}
 
   sources/f-e/browser:
     dependencies:
@@ -5115,4 +5124,3 @@ packages:
     resolution: {tarball: https://codeload.github.com/uNetworking/uWebSockets.js/tar.gz/d39d4181daf5b670d44cbc1b18f8c28c85fd4142}
     name: uWebSockets.js
     version: 20.30.0
-    dev: false
