@@ -12,7 +12,8 @@
   "private": true,
   "main": "ureg.mjs",
   "scripts": {
-    "preinstall": "npx only-allow pnpm"
+    "preinstall": "npx only-allow pnpm",
+    "test": "NODE_DEBUG=LibWebsocketServer*,ureg,UserRegistrationBL* ./node_modules/.bin/nyc ./node_modules/.bin/mocha --jobs $(nproc --all)"
   },
   "author": "Dmitry N. Medvedev <dmitry.medvedev@gmail.com>",
   "license": "MIT",
@@ -22,6 +23,74 @@
     "dotenv": "^16.1.4"
   },
   "devDependencies": {
-    "uWebSockets.js": "github:uNetworking/uWebSockets.js#v20.30.0"
+    "uWebSockets.js": "github:uNetworking/uWebSockets.js#v20.30.0",
+    "chai": "^4.3.7",
+    "dotenv": "^16.1.4",
+    "mocha": "^10.2.0",
+    "nyc": "^15.1.0",
+    "ws": "^8.13.0"
+  },
+  "optionalDependencies": {
+    "bufferutil": "^4.0.7",
+    "utf-8-validate": "^6.0.3"
+  },
+  "mocha": {
+    "asyncOnly": true,
+    "bail": true,
+    "checkLeaks": true,
+    "diff": true,
+    "extension": [
+      "mjs"
+    ],
+    "exit": true,
+    "failZero": true,
+    "forbidOnly": true,
+    "forbidPending": true,
+    "parallel": true,
+    "fullTrace": true,
+    "inlineDiffs": true,
+    "reporter": "spec",
+    "recursive": true,
+    "spec": [
+      "./specs/*.spec.mjs"
+    ]
+  },
+  "nyc  ": {
+    "all": true,
+    "reporter": "lcov",
+    "check-coverage": true,
+    "branches": 80,
+    "lines": 80,
+    "functions": 80,
+    "statements": 80,
+    "extension": [
+      ".mjs"
+    ],
+    "watermarks": {
+      "lines": [
+        80,
+        95
+      ],
+      "functions": [
+        80,
+        95
+      ],
+      "branches": [
+        80,
+        95
+      ],
+      "statements": [
+        80,
+        95
+      ]
+    },
+    "include": [
+      "**/*.mjs"
+    ],
+    "exclude": [
+      "node_modules",
+      "**/*.spec.mjs"
+    ],
+    "excludeNodeModules": true
   }
 }

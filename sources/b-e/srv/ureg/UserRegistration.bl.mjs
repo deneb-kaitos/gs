@@ -53,6 +53,8 @@ export class UserRegistrationBL {
   }
 
   close(ws, code, message) {
-    this.#debuglog(`websocket [${ws.gs.id}] closed with code [${code}] and message:`, this.#decoder.decode(message));
+    const { id } = this.#clientsProperties.get(ws);
+
+    this.#debuglog(`websocket [${id}] closed with code [${code}] and message:`, this.#decoder.decode(message));
   }
 }
