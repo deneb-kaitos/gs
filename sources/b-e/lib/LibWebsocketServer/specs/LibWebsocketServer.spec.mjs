@@ -63,7 +63,7 @@ describe('LibWebsocketServer', () => {
       },
     };
 
-    libWebsocketServer = new LibWebsocketServer(libWebsocketServerConfig, libWebsocketServerHandlers);
+    libWebsocketServer = new LibWebsocketServer(libWebsocketServerConfig, libWebsocketServerHandlers, debuglog);
 
     return await libWebsocketServer.start();
   });
