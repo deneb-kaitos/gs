@@ -29,7 +29,6 @@ export class UserRegistrationBL {
     this.#clients.delete(id);
   }
 
-  // eslint-disable-next-line class-methods-use-this
   open(ws) {
     const id = randomUUID();
 
@@ -41,7 +40,6 @@ export class UserRegistrationBL {
     this.#debuglog(`websocket connected: ${id}`);
   }
 
-  // eslint-disable-next-line class-methods-use-this
   message(ws, message, isBinary) {
     if (isBinary === false) {
       this.#debuglog(`message.isBinary: ${isBinary}`);
@@ -54,7 +52,6 @@ export class UserRegistrationBL {
     this.#debuglog((this.#clientsProperties.get(ws)).id, message, isBinary);
   }
 
-  // eslint-disable-next-line class-methods-use-this
   close(ws, code, message) {
     this.#debuglog(`websocket [${ws.gs.id}] closed with code [${code}] and message:`, this.#decoder.decode(message));
   }
