@@ -97,10 +97,29 @@ importers:
       dotenv:
         specifier: ^16.1.4
         version: 16.1.4
+    optionalDependencies:
+      bufferutil:
+        specifier: ^4.0.7
+        version: 4.0.7
+      utf-8-validate:
+        specifier: ^6.0.3
+        version: 6.0.3
     devDependencies:
+      chai:
+        specifier: ^4.3.7
+        version: 4.3.7
+      mocha:
+        specifier: ^10.2.0
+        version: 10.2.0
+      nyc:
+        specifier: ^15.1.0
+        version: 15.1.0
       uWebSockets.js:
         specifier: github:uNetworking/uWebSockets.js#v20.30.0
         version: github.com/uNetworking/uWebSockets.js/d39d4181daf5b670d44cbc1b18f8c28c85fd4142
+      ws:
+        specifier: ^8.13.0
+        version: 8.13.0(bufferutil@4.0.7)(utf-8-validate@6.0.3)
     dependenciesMeta:
       '@deneb-kaitos/libwebsocketserver':
         injected: true
