@@ -1,0 +1,24 @@
+{
+  "name": "@deneb-kaitos/ureg",
+  "version": "0.0.0",
+  "description": "user registration websocket server",
+  "type": "module",
+  "packageManager": "pnpm@8.6.0",
+  "engines": {
+    "node": "20.2.0",
+    "pnpm": "8.6.0"
+  },
+  "engineStrict": true,
+  "private": true,
+  "main": "ureg.mjs",
+  "scripts": {
+    "preinstall": "npx only-allow pnpm"
+  },
+  "keywords": [],
+  "author": "Dmitry N. Medvedev <dmitry.medvedev@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "@deneb-kaitos/libwebsocketserver": "workspace:^",
+    "dotenv": "^16.1.4"
+  }
+}
