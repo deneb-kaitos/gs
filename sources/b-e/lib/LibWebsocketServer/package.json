@@ -10,7 +10,7 @@
   },
   "engineStrict": true,
   "private": true,
-  "main": "index.mjs",
+  "main": "LibWebsocketServer.mjs",
   "scripts": {
     "preinstall": "npx only-allow pnpm",
     "test": "NODE_DEBUG=LibWebsocketServer* ./node_modules/.bin/nyc ./node_modules/.bin/mocha --jobs $(nproc --all)"
