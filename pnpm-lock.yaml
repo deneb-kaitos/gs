@@ -5132,7 +5132,7 @@ packages:
     resolution: {directory: sources/b-e/lib/LibWebsocketServer, type: directory}
     name: '@deneb-kaitos/libwebsocketserver'
     version: 0.0.0
-    engines: {node: 20.2.0, pnpm: 8.6.0}
+    engines: {node: 20.3.0, pnpm: 8.6.0}
     requiresBuild: true
     dependencies:
       uWebSockets.js: github.com/uNetworking/uWebSockets.js/d39d4181daf5b670d44cbc1b18f8c28c85fd4142
@@ -5145,7 +5145,7 @@ packages:
     resolution: {directory: sources/common/codes/ws, type: directory}
     name: '@deneb-kaitos/wscodes'
     version: 0.0.0
-    engines: {node: 20.2.0, pnpm: 8.6.0}
+    engines: {node: 20.3.0, pnpm: 8.6.0}
     requiresBuild: true
     dev: false
 
