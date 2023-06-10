@@ -39,9 +39,9 @@ const startServer = async () => {
   });
 
   const libWebsocketServerHandlers = {
-    open: UserRegistrationHandlers.open,
-    message: UserRegistrationHandlers.message,
-    close: UserRegistrationHandlers.close,
+    open: userRegistrationHandlers.open,
+    message: userRegistrationHandlers.message,
+    close: userRegistrationHandlers.close,
   };
 
   libWebsocketServer = new LibWebsocketServer(readConfigFromEnv(), libWebsocketServerHandlers, debuglog);
