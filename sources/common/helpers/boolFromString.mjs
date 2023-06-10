@@ -1,5 +1,9 @@
-export const boolFromString = (boolString) => {
-  switch (boolString.toLowerCase()) {
+export const boolFromString = (boolString = null) => {
+  if (boolString === null) {
+    throw new ReferenceError('input is undefined');
+  }
+
+  switch (boolString.toLowerCase().trim()) {
     case 'true': {
       return true;
     }

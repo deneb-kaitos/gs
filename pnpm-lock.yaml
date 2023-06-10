@@ -137,7 +137,20 @@ importers:
       '@deneb-kaitos/wscodes':
         injected: true
 
-  sources/common/codes/ws: {}
+  sources/common/codes/ws:
+    devDependencies:
+      chai:
+        specifier: ^4.3.7
+        version: 4.3.7
+      dotenv:
+        specifier: ^16.1.4
+        version: 16.1.4
+      mocha:
+        specifier: ^10.2.0
+        version: 10.2.0
+      nyc:
+        specifier: ^15.1.0
+        version: 15.1.0
 
   sources/common/helpers:
     devDependencies:
