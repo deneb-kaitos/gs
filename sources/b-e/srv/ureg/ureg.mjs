@@ -1,5 +1,4 @@
 #!/usr/bin/env -S NODE_ENV=production NODE_DEBUG=LibWebsocketServer*,ureg NODE_OPTIONS=--experimental-permission NODE_OPTIONS='--allow-fs-read=./ureg.mjs' node
-// NODE_OPTIONS='--allow-fs-read=./ureg.mjs'
 
 /**
  * kill -s HUP <processid> -- force to restart the server
@@ -14,13 +13,13 @@ import {
   LibWebsocketServer,
 } from '@deneb-kaitos/libwebsocketserver';
 import {
-  UserRegistrationBL,
-} from './UserRegistration.bl.mjs';
+  UserRegistrationHandlers,
+} from './UserRegistration.handlers.mjs';
 
 globalThis.name = 'ureg';
 
 const debuglog = util.debuglog(globalThis.name);
-let userRegistrationBL = null;
+let userRegistrationHandlers = null;
 const readConfigFromEnv = () => ({
   server: {
     WS_PROTO: process.env.WS_PROTO,
@@ -33,16 +32,16 @@ const readConfigFromEnv = () => ({
 });
 let libWebsocketServer = null;
 const startServer = async () => {
-  userRegistrationBL = new UserRegistrationBL(debuglog);
+  userRegistrationHandlers = new UserRegistrationHandlers(debuglog);
 
   config({
     path: '.env',
   });
 
   const libWebsocketServerHandlers = {
-    open: userRegistrationBL.open,
-    message: userRegistrationBL.message,
-    close: userRegistrationBL.close,
+    open: UserRegistrationHandlers.open,
+    message: UserRegistrationHandlers.message,
+    close: UserRegistrationHandlers.close,
   };
 
   libWebsocketServer = new LibWebsocketServer(readConfigFromEnv(), libWebsocketServerHandlers, debuglog);
