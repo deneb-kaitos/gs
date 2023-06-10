@@ -5,7 +5,7 @@ import {
   WebsocketCodes,
 } from '@deneb-kaitos/wscodes';
 
-export class UserRegistrationHandlers {
+export class Handlers {
   #debuglog = null;
   #decoder = new TextDecoder();
   #encoder = new TextEncoder();

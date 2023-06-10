@@ -1,4 +1,6 @@
-import util from 'node:util';
+import {
+  randomUUID,
+} from 'node:crypto';
 import uWS from 'uWebSockets.js';
 
 const DISABLE_FORCED_CLOSE = 0;
@@ -9,7 +11,8 @@ export class LibWebsocketServer {
   #handlers = null;
   #handle = null;
   // eslint-disable-next-line class-methods-use-this
-  #debuglog = () => {};
+  #debuglog = null;
+  #serverId = null;
 
   constructor(config = null, handlers = null, debuglog = null) {
     if (config === null) {
@@ -24,13 +27,19 @@ export class LibWebsocketServer {
 
     this.#handlers = Object.freeze(handlers);
 
-    if (debuglog) {
+    if (debuglog === null) {
+      throw new ReferenceError('debuglog is undefined');
+    } else {
       this.#debuglog = debuglog;
     }
   }
 
+  get serverId() {
+    return this.#serverId;
+  }
+
   start() {
-    this.#debuglog = util.debuglog(this.constructor.name);
+    this.#serverId = randomUUID();
 
     return new Promise((ok, fail) => {
       this.#app = uWS
@@ -65,8 +74,6 @@ export class LibWebsocketServer {
 
         this.#handle = null;
       }
-
-      this.#debuglog = null;
 
       ok();
     });
