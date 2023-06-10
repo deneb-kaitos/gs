@@ -13,14 +13,16 @@
   "main": "ureg.mjs",
   "scripts": {
     "preinstall": "npx only-allow pnpm",
-    "test": "NODE_DEBUG=LibWebsocketServer*,ureg,UserRegistrationBL*,rua* ./node_modules/.bin/nyc ./node_modules/.bin/mocha --jobs $(nproc --all)"
+    "test": "NODE_DEBUG=LibWebsocketServer*,ureg*,UserRegistrationBL*,rua* ./node_modules/.bin/nyc ./node_modules/.bin/mocha --jobs $(nproc --all)"
   },
   "author": "Dmitry N. Medvedev <dmitry.medvedev@gmail.com>",
   "license": "MIT",
   "dependencies": {
+    "@deneb-kaitos/helpers": "workspace:^",
     "@deneb-kaitos/libwebsocketserver": "workspace:^",
     "@deneb-kaitos/wscodes": "workspace:^",
     "dotenv": "^16.1.4",
+    "redis": "^4.6.7",
     "xstate": "^4.37.2"
   },
   "devDependencies": {

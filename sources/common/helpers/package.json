@@ -1,7 +1,7 @@
 {
-  "name": "@deneb-kaitos/wscodes",
+  "name": "@deneb-kaitos/helpers",
   "version": "0.0.0",
-  "description": "websocket error codes",
+  "description": "[lib] helpers",
   "type": "module",
   "packageManager": "pnpm@8.6.0",
   "engines": {
@@ -10,10 +10,12 @@
   },
   "engineStrict": true,
   "private": true,
-  "main": "WebsocketCodes.mjs",
+  "files": [
+    "boolFromString.mjs"
+  ],
   "scripts": {
     "preinstall": "npx only-allow pnpm",
-    "test": "NODE_DEBUG=WebsocketCodes:specs ./node_modules/.bin/nyc ./node_modules/.bin/mocha --jobs $(nproc --all)"
+    "test": "NODE_DEBUG=helpers* ./node_modules/.bin/nyc ./node_modules/.bin/mocha --jobs $(nproc --all)"
   },
   "author": "Dmitry N. Medvedev <dmitry.medvedev@gmail.com>",
   "license": "MIT",
