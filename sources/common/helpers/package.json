@@ -1,7 +1,7 @@
 {
-  "name": "@deneb-kaitos/ureg",
+  "name": "@deneb-kaitos/helpers",
   "version": "0.0.0",
-  "description": "user registration websocket server",
+  "description": "[lib] helpers",
   "type": "module",
   "packageManager": "pnpm@8.6.0",
   "engines": {
@@ -10,33 +10,23 @@
   },
   "engineStrict": true,
   "private": true,
-  "main": "ureg.mjs",
+  "files": [
+    "boolFromString.mjs"
+  ],
   "scripts": {
     "preinstall": "npx only-allow pnpm",
-    "test": "NODE_DEBUG=LibWebsocketServer*,ureg*,UserRegistrationBL*,rua* ./node_modules/.bin/nyc ./node_modules/.bin/mocha --jobs $(nproc --all)"
+    "test": "NODE_DEBUG=helpers* ./node_modules/.bin/nyc ./node_modules/.bin/mocha --jobs $(nproc --all)"
   },
   "author": "Dmitry N. Medvedev <dmitry.medvedev@gmail.com>",
   "license": "MIT",
-  "dependencies": {
-    "@deneb-kaitos/helpers": "workspace:^",
-    "@deneb-kaitos/libwebsocketserver": "workspace:^",
-    "@deneb-kaitos/wscodes": "workspace:^",
-    "dotenv": "^16.1.4",
-    "redis": "^4.6.7",
-    "xstate": "^4.37.2"
-  },
+  "dependencies": {},
   "devDependencies": {
     "chai": "^4.3.7",
     "dotenv": "^16.1.4",
     "mocha": "^10.2.0",
-    "nyc": "^15.1.0",
-    "uWebSockets.js": "github:uNetworking/uWebSockets.js#v20.30.0",
-    "ws": "^8.13.0"
+    "nyc": "^15.1.0"
   },
-  "optionalDependencies": {
-    "bufferutil": "^4.0.7",
-    "utf-8-validate": "^6.0.3"
-  },
+  "optionalDependencies": {},
   "mocha": {
     "asyncOnly": true,
     "bail": true,
