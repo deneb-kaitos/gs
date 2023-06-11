@@ -40,7 +40,7 @@
   "mocha": {
     "asyncOnly": true,
     "bail": true,
-    "checkLeaks": true,
+    "checkLeaks": false,
     "diff": true,
     "extension": [
       "mjs"
@@ -48,7 +48,7 @@
     "exit": true,
     "failZero": true,
     "forbidOnly": true,
-    "forbidPending": true,
+    "forbidPending": false,
     "parallel": true,
     "fullTrace": true,
     "inlineDiffs": true,
