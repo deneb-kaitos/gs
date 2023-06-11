@@ -90,7 +90,7 @@ importers:
     dependencies:
       '@deneb-kaitos/helpers':
         specifier: workspace:^
-        version: file:sources/common/helpers
+        version: link:../../../common/helpers
       '@deneb-kaitos/libwebsocketserver':
         specifier: workspace:^
         version: file:sources/b-e/lib/LibWebsocketServer
@@ -5252,14 +5252,6 @@ packages:
   file:sources/common/codes/ws:
     resolution: {directory: sources/common/codes/ws, type: directory}
     name: '@deneb-kaitos/wscodes'
-    version: 0.0.0
-    engines: {node: 20.3.0, pnpm: 8.6.0}
-    requiresBuild: true
-    dev: false
-
-  file:sources/common/helpers:
-    resolution: {directory: sources/common/helpers, type: directory}
-    name: '@deneb-kaitos/helpers'
     version: 0.0.0
     engines: {node: 20.3.0, pnpm: 8.6.0}
     requiresBuild: true
