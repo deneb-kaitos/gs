@@ -28,7 +28,6 @@ import {
 import {
   WebsocketCodes,
 } from '@deneb-kaitos/wscodes';
-import exp from 'node:constants';
 import {
   readWSConfigFromEnv,
 } from '../helpers/readWSConfigFromEnv.mjs';
@@ -53,12 +52,12 @@ describe('redis', () => {
   let testRedisClient = null;
 
   before(async () => {
+    debuglog = util.debuglog('ureg:specs');
     config({
       path: 'specs/.env',
     });
 
     sinkStream = `${process.env.UREG_SINK_STREAM}:${randomUUID()}`;
-    debuglog = util.debuglog('ureg:specs');
     serverId = randomUUID();
 
     redisKeysToClean.push(sinkStream);
@@ -76,12 +75,6 @@ describe('redis', () => {
   it('should test the server w/ websockets', async () => {
     const redisConf = readRedisConfigFromEnv(boolFromString, serverId);
     const streamOpts = readStreamOptionsFromEnv();
-    debuglog({
-      redisConf,
-      streamOpts,
-      sinkStream,
-      serverId,
-    });
     const handlers = new Handlers(
       redisConf,
       streamOpts,
@@ -104,6 +97,13 @@ describe('redis', () => {
       await libWebsocketServer.stop();
       return await handlers.stop();
     };
+    const expectedMessage = {
+      type: 'key',
+      payload: {
+        value: randomUUID(),
+      },
+    };
+    const encodedMessage = encoder.encode(JSON.stringify(expectedMessage));
     const sendMessage = () => new Promise((ok, fail) => {
       const { server } = readWSConfigFromEnv();
       const client = new WebSocket(
@@ -112,33 +112,25 @@ describe('redis', () => {
           perMessageDeflate: false,
         },
       );
-      const expectedMessage = encoder.encode(JSON.stringify(
-        {
-          type: 'key',
-          payload: {
-            value: randomUUID(),
-          },
-        },
-      ));
 
       client.on('open', () => {
-        client.send(expectedMessage);
+        client.send(encodedMessage);
       });
 
       client.on('close', (code, reason) => {
-        debuglog(`client->close w/ ${code} and "${decoder.decode(reason)}"`);
+        debuglog(`specs:client->close w/ ${code} and "${decoder.decode(reason)}"`);
 
         ok();
       });
 
       client.on('error', (error) => {
-        debuglog('client->error', error);
+        debuglog('specs:client->error', error);
 
         fail(error);
       });
 
       client.on('message', (data, isBinary) => {
-        debuglog('client->message', data, isBinary);
+        debuglog('specs:client->message', data, isBinary);
 
         client.close(WebsocketCodes.CLOSE_NORMAL, encoder.encode('bye'));
       });
@@ -161,23 +153,30 @@ describe('redis', () => {
 
     const retrievedRecords = await retrieveStreamData();
 
-    debuglog('retrievedRecords', retrievedRecords);
+    const checkResults = () => new Promise((ok, fail) => {
+      try {
+        for (const { name, messages } of retrievedRecords) {
+          expect(name).to.exist;
+          expect(messages).to.exist;
+          for (const m of messages) {
+            debuglog('retrievedRecord.message:', m);
+            const {
+              message: {
+                sid,
+                payload,
+              },
+            } = m;
 
-    for (const { name, messages } of retrievedRecords) {
-      debuglog('retrievedRecord', { name, messages });
-      expect(name).to.exist;
-      expect(messages).to.exist;
-      for (const m of messages) {
-        debuglog('retrievedRecord.message:', m);
-        // const {
-        //   id,
-        //   message: {
-        //     sid,
-        //     cid,
-        //     payload,
-        //   },
-        // } = m;
+            expect(serverId).to.equal(sid);
+            expect(JSON.parse(payload)).to.deep.equal(expectedMessage);
+          }
+        }
+        ok();
+      } catch (resultError) {
+        fail(resultError);
       }
-    }
+    });
+
+    return await checkResults();
   });
 });
