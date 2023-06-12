@@ -109,7 +109,7 @@ export class Handlers {
     const streamMessage = {
       sid: this.#serverId, // websocket server id
       cid: (this.#clientsProperties.get(ws)).id, // websocket client id
-      payload: Buffer.from(msg).toString('hex'),
+      payload: Buffer.from(msg).toString('ascii'),
     };
 
     this.#debuglog('.message::streamMessage', streamMessage);
